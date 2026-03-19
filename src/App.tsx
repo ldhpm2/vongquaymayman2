@@ -18,6 +18,15 @@ const COLORS = [
   '#3b82f6', '#0ea5e9', '#f97316', '#ec4899', '#a855f7', '#7c3aed', '#4338ca'
 ];
 
+const DEFAULT_STUDENTS: Student[] = [
+  { id: 1, name: 'Nguyễn Văn An', scores: ['', '', '', '', ''] },
+  { id: 2, name: 'Trần Thị Bình', scores: ['', '', '', '', ''] },
+  { id: 3, name: 'Lê Hoàng Cường', scores: ['', '', '', '', ''] },
+  { id: 4, name: 'Phạm Minh Đức', scores: ['', '', '', '', ''] },
+  { id: 5, name: 'Hoàng Thu Thảo', scores: ['', '', '', '', ''] },
+  { id: 6, name: 'Vũ Hải Nam', scores: ['', '', '', '', ''] },
+];
+
 export default function App() {
   const [students, setStudents] = useState<Student[]>([]);
   const [spinning, setSpinning] = useState(false);
@@ -40,11 +49,19 @@ export default function App() {
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData);
-        if (parsed.students) setStudents(parsed.students);
+        if (parsed.students && parsed.students.length > 0) {
+          setStudents(parsed.students);
+        } else {
+          setStudents(DEFAULT_STUDENTS);
+        }
         if (parsed.showTable) setShowTable(parsed.showTable);
       } catch (e) {
         console.error('Failed to load saved data', e);
+        setStudents(DEFAULT_STUDENTS);
       }
+    } else {
+      setStudents(DEFAULT_STUDENTS);
+      setShowTable(true);
     }
 
     audioTickRef.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3');
@@ -156,16 +173,20 @@ export default function App() {
     ctx.stroke();
 
     // Draw pointer (triangle on the right pointing inwards)
+    ctx.save();
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
     ctx.beginPath();
-    ctx.moveTo(size - 10, centerY);
-    ctx.lineTo(size - 40, centerY - 20);
-    ctx.lineTo(size - 40, centerY + 20);
+    ctx.moveTo(size - 40, centerY); // Tip pointing to the center
+    ctx.lineTo(size - 10, centerY - 25);
+    ctx.lineTo(size - 10, centerY + 25);
     ctx.closePath();
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#1e293b'; // Slate 800
     ctx.fill();
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
     ctx.stroke();
+    ctx.restore();
   }, [students]);
 
   useEffect(() => {
