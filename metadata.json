@@ -1,0 +1,5 @@
+{
+  "name": "Vòng Quay May Mắn",
+  "description": "Ứng dụng vòng quay may mắn để chọn tên ngẫu nhiên, hỗ trợ nhập từ Excel và AI.",
+  "requestFramePermissions": []
+}
